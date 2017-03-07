@@ -10,3 +10,6 @@ boiler plate for UI testing using:
 
 # To run tests
 enter `nosetests` into command line
+
+## To generate xunit like reports
+enter `nosetests --with-xunit` into command line
