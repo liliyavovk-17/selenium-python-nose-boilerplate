@@ -4,7 +4,7 @@ from locators import LoginPageLocators
 
 
 class EmailInputElement(BasePageElement):
-    """This class gets the search text from the specified locator."""
+    """This class gets the search email input field from the specified locator."""
 
     locator = LoginPageLocators.EMAIL_INPUT
 
