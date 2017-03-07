@@ -18,7 +18,7 @@ class LoginPage(BasePage):
         """Verifies that the hardcoded text "Test" appears in page title."""
         return "Test" in self.driver.title
 
-    def click_log_button(self):
+    def click_log_in_button(self):
         """Clicks the log in button."""
         element = self.driver.find_element(*LoginPageLocators.LOG_IN_BUTTON)
         element.click()

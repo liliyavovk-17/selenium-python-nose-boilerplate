@@ -14,6 +14,7 @@ class TestLogin:
         login_page.email_input = "hentest@test.com"
         email_input_text = login_page.email_input
         assert email_input_text == "hentest@test.com", "Some error message."
+        login_page.click_log_in_button
 
     def tearDown(self):
         self.driver.close()
