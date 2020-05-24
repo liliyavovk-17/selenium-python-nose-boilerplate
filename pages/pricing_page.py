@@ -5,30 +5,61 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class PricingPageTwoServings(BasePage):
+class PricingPage(BasePage):
 
-    def assert_two_serving_module_visible(self):
+    def find_menu(self, serving_amount):
         WebDriverWait(self.driver, 15).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".pom-PlanCard__contents"))
         )
-        two_serving_module = self.driver.find_element(*PricingPageLocators.SERVING_2_SERVINGS_MODULE)
-        two_serving_module.is_displayed()
+        serving_module = None
+        if serving_amount == 2:
+            serving_module = self.driver.find_element(*PricingPageLocators.SERVING_2_SERVINGS_MODULE)
+        elif serving_amount == 4:
+            serving_module = self.driver.find_element(*PricingPageLocators.SERVING_4_SERVINGS_MODULE)
+        return serving_module.is_displayed()
 
-    def assert_price_per_serving(self):
-        two_serving_module_price_per_serving = self.driver.find_element(*PricingPageLocators.SERVING_2_COST_PER_SERVING)
-        text = two_serving_module_price_per_serving.get_attribute("textContent")
-        assert "9.99" in str(text), "No such textContent"
+    def assert_price_per_serving(self, price_per_serving):
+        text = None
+        if price_per_serving == "9.99":
+            two_serving_module_price_per_serving = self.driver.find_element(*PricingPageLocators.SERVING_2_COST_PER_SERVING)
+            text = two_serving_module_price_per_serving.get_attribute("textContent")
+        elif price_per_serving == "8.99" or price_per_serving == "7.99":
+            four_serving_module_price_per_serving = self.driver.find_element(*PricingPageLocators.SERVING_4_COST_PER_SERVING)
+            text = four_serving_module_price_per_serving.get_attribute("textContent")
+        assert price_per_serving in str(text), "No such textContent"
 
-    def assert_shipping_price(self):
-        two_serving_module_shipping_price = self.driver.find_element(*PricingPageLocators.SERVING_2_SHIPPING_PRICE)
-        text = two_serving_module_shipping_price.get_attribute("textContent")
-        assert "Free" in str(text), "No such textContent"
+    def assert_shipping_price(self, shipping_price):
+        text = None
+        text2 = None
+        if shipping_price == "Free":
+            two_serving_module_shipping_price = self.driver.find_element(*PricingPageLocators.SERVING_2_SHIPPING_PRICE)
+            text = two_serving_module_shipping_price.get_attribute("textContent")
+            four_serving_module_shipping_price = self.driver.find_element(*PricingPageLocators.SERVING_4_SHIPPING_PRICE)
+            text2 = four_serving_module_shipping_price.get_attribute("textContent")
+        elif shipping_price == "7.99":
+            two_serving_module_shipping_price = self.driver.find_element(*PricingPageLocators.SERVING_2_SHIPPING_PRICE)
+            text = two_serving_module_shipping_price.get_attribute("textContent")
+            four_serving_module_price_per_serving = self.driver.find_element(*PricingPageLocators.SERVING_4_COST_PER_SERVING)
+            text2 = four_serving_module_price_per_serving.get_attribute("textContent")
+        assert shipping_price in str(text or text2), "No such textContent"
 
-    def assert_total_price(self):
-        two_serving_module_total_price = self.driver.find_element(*PricingPageLocators.SERVING_2_TOTAL_PRICE)
-        text = two_serving_module_total_price.get_attribute("textContent")
-        assert "59.94" in str(text), "No such textContent"
+    def assert_total_price(self, total_price):
+        text = None
+        if total_price == "59.94" or total_price == "47.95":
+            two_serving_module_total_price = self.driver.find_element(*PricingPageLocators.SERVING_2_TOTAL_PRICE)
+            text = two_serving_module_total_price.get_attribute("textContent")
+        elif total_price == "71.92" or total_price == "95.88":
+            four_serving_module_total_price = self.driver.find_element(*PricingPageLocators.SERVING_4_TOTAL_PRICE)
+            text = four_serving_module_total_price.get_attribute("textContent")
+        assert total_price in str(text), "No such textContent"
 
+    def change_recipes_amount(self, recipes_amount):
+        recipe_change = None
+        if recipes_amount == 2:
+            recipe_change = self.driver.find_element(*PricingPageLocators.SERVING_2_RECIPES_PER_WEEK_CHANGE)
+        elif recipes_amount == 3:
+            recipe_change = self.driver.find_element(*PricingPageLocators.SERVING_4_RECIPES_PER_WEEK_CHANGE)
+        recipe_change.click()
 
     def wait_for_select_button(self):
         WebDriverWait(self.driver, 10).until(
@@ -43,72 +74,3 @@ class PricingPageTwoServings(BasePage):
         """Verifies hardcoded URL name matches current URL"""
         url = self.driver.current_url
         return "https://www.blueapron.com/users/sign_up" in url
-
-
-class PricingPageTwoServingsAfterPriceChange(BasePage):
-
-    def change_recipes_to_two_two_serving(self):
-        recipes_to_two = self.driver.find_element(*PricingPageLocators.SERVING_2_RECIPES_PER_WEEK_CHANGE)
-        recipes_to_two.click()
-
-    def assert_price_per_serving(self):
-        two_serving_module_price_per_serving = self.driver.find_element(*PricingPageLocators.SERVING_2_COST_PER_SERVING)
-        text = two_serving_module_price_per_serving.get_attribute("textContent")
-        assert "9.99" in str(text), "No such textContent"
-
-    def assert_shipping_price(self):
-        two_serving_module_shipping_price = self.driver.find_element(*PricingPageLocators.SERVING_2_SHIPPING_PRICE)
-        text = two_serving_module_shipping_price.get_attribute("textContent")
-        assert "7.99" in str(text), "No such textContent"
-
-    def assert_total_price(self):
-        two_serving_module_total_price = self.driver.find_element(*PricingPageLocators.SERVING_2_TOTAL_PRICE)
-        text = two_serving_module_total_price.get_attribute("textContent")
-        assert "47.95" in str(text), "No such textContent"
-
-
-class PricingPagFourServings(BasePage):
-
-    def assert_four_serving_module_visible(self):
-        WebDriverWait(self.driver, 15).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".pom-PlanCard__contents"))
-        )
-        four_serving_module = self.driver.find_element(*PricingPageLocators.SERVING_4_SERVINGS_MODULE)
-        four_serving_module.is_displayed()
-
-    def assert_price_per_serving(self):
-        two_serving_module_price_per_serving = self.driver.find_element(*PricingPageLocators.SERVING_2_COST_PER_SERVING)
-        text = two_serving_module_price_per_serving.get_attribute("textContent")
-        assert "9.99" in str(text), "No such textContent"
-
-    def assert_shipping_price(self):
-        four_serving_module_shipping_price = self.driver.find_element(*PricingPageLocators.SERVING_4_SHIPPING_PRICE)
-        text = four_serving_module_shipping_price.get_attribute("textContent")
-        assert "Free" in str(text), "No such textContent"
-
-    def assert_total_price(self):
-        four_serving_module_total_price = self.driver.find_element(*PricingPageLocators.SERVING_4_TOTAL_PRICE)
-        text = four_serving_module_total_price.get_attribute("textContent")
-        assert "71.92" in str(text), "No such textContent"
-
-
-class PricingPageFourServingsAfterPriceChange(BasePage):
-
-    def change_recipes_to_three_four_serving(self):
-        recipes_to_three = self.driver.find_element(*PricingPageLocators.SERVING_4_RECIPES_PER_WEEK_CHANGE)
-        recipes_to_three.click()
-
-    def assert_price_per_serving(self):
-        four_serving_module_price_per_serving = self.driver.find_element(*PricingPageLocators.SERVING_4_COST_PER_SERVING)
-        text = four_serving_module_price_per_serving.get_attribute("textContent")
-        assert "7.99" in str(text), "No such textContent"
-
-    # def assert_shipping_price(self):
-    #     four_serving_module_shipping_price = self.driver.find_element(*PricingPageLocators.SERVING_4_SHIPPING_PRICE)
-    #     text = four_serving_module_shipping_price.get_attribute("textContent")
-    #     assert "7.99" in str(text), "No such textContent"
-
-    def assert_total_price(self):
-        four_serving_module_total_price = self.driver.find_element(*PricingPageLocators.SERVING_4_TOTAL_PRICE)
-        text = four_serving_module_total_price.get_attribute("textContent")
-        assert "95.88" in str(text), "No such textContent"
