@@ -6,8 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class PricingPage(BasePage):
+    """Pricing page action methods come here."""
 
     def find_menu(self, serving_amount):
+        """Verifies Serving modules are displayed on the page."""
         WebDriverWait(self.driver, 15).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".pom-PlanCard__contents"))
         )
@@ -19,6 +21,7 @@ class PricingPage(BasePage):
         return serving_module.is_displayed()
 
     def assert_price_per_serving(self, price_per_serving):
+        """Verifies Serving modules prices per serving are correct."""
         text = None
         if price_per_serving == "9.99":
             two_serving_module_price_per_serving = self.driver.find_element(*PricingPageLocators.SERVING_2_COST_PER_SERVING)
@@ -29,6 +32,7 @@ class PricingPage(BasePage):
         assert price_per_serving in str(text), "No such textContent"
 
     def assert_shipping_price(self, shipping_price):
+        """Verifies Serving modules shipping prices are correct."""
         text = None
         text2 = None
         if shipping_price == "Free":
@@ -44,6 +48,7 @@ class PricingPage(BasePage):
         assert shipping_price in str(text or text2), "No such textContent"
 
     def assert_total_price(self, total_price):
+        """Verifies Serving modules total prices are correct."""
         text = None
         if total_price == "59.94" or total_price == "47.95":
             two_serving_module_total_price = self.driver.find_element(*PricingPageLocators.SERVING_2_TOTAL_PRICE)
@@ -54,6 +59,7 @@ class PricingPage(BasePage):
         assert total_price in str(text), "No such textContent"
 
     def change_recipes_amount(self, recipes_amount):
+        """Clicks on the elements to change amount of recipes per week."""
         recipe_change = None
         if recipes_amount == 2:
             recipe_change = self.driver.find_element(*PricingPageLocators.SERVING_2_RECIPES_PER_WEEK_CHANGE)
@@ -62,11 +68,13 @@ class PricingPage(BasePage):
         recipe_change.click()
 
     def wait_for_select_button(self):
+        """Waits for Select button to load on the page."""
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(*PricingPageLocators.SELECT_BUTTON)
         )
 
     def click_select_button(self):
+        """Clicks Select button."""
         select_button = self.driver.find_element(*PricingPageLocators.SELECT_BUTTON)
         select_button.click()
 

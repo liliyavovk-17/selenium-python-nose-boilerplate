@@ -14,10 +14,12 @@ class HomePage(BasePage):
         return "https://www.blueapron.com/pricing" in url
 
     def wait_for_nav_bar_element(self):
+        """Waits for nav bar to load on the page"""
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".header-nav .nav_pricing"))
         )
 
     def click_nav_bar_pricing(self):
+        """Clicks on nav bar Pricing"""
         pricing_nav_bar = self.driver.find_element(*HomePageLocators.PRICING_IN_HEADER)
         pricing_nav_bar.click()

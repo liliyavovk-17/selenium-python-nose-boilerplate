@@ -1,5 +1,5 @@
-# selenium-python-nose-boilerplate
-boiler plate for UI testing using:
+# selenium-python-nose-installation
+For UI testing using:
 - selenium python bindings
 - nosetest
 
